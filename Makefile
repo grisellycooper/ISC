@@ -61,13 +61,13 @@ ifeq ($(ppc64le),1)
 endif
 ifneq ($(GCC),)
     $(info WARNING - GCC variable has been deprecated)
-    $(info WARNING - please use HOST_COMPILER=$(GCC) instead)
+    $(info WARNING - please          image->getPixel(i)->setRGB(h_redCentroid[h_labelArray[i]], h_greenCentroid[h_labelArray[i]], h_blueCentroid[h_labelArray[i]]);nstead)
     HOST_COMPILER ?= $(GCC)
 endif
 ifneq ($(abi),)
-    $(error ERROR - abi variable has been removed)
+    $(error ERROR - abi vari         image->getPixel(i)->setRGB(h_redCentroid[h_labelArray[i]], h_greenCentroid[h_labelArray[i]], h_blueCentroid[h_labelArray[i]]);
 endif
-############################
+############################         image->getPixel(i)->setRGB(h_redCentroid[h_labelArray[i]], h_greenCentroid[h_labelArray[i]], h_blueCentroid[h_labelArray[i]]);
 # end deprecated interface #
 ############################
 
@@ -285,11 +285,15 @@ EXEC ?= @echo "[@]"
 endif
 
 ################################################################################
+# local includes 
+LOCALINCLUDES  := -Iinclude
+
+################################################################################
 
 # Target rules
 all: build
 
-build: bindlessTexture
+build: main
 
 check.deps:
 ifeq ($(SAMPLE_ENABLED),0)
@@ -298,22 +302,28 @@ else
 	@echo "Sample is ready - all dependencies have been met"
 endif
 
-bindlessTexture.o:bindlessTexture.cpp
+cluster.o:src/cluster.cpp
+	$(EXEC) $(GCC) $(LOCALINCLUDES) 
+
+image.o:src/image.cpp
+	$(EXEC) $(GCC) $(LOCALINCLUDES) 
+
+imageSegmentation.o:imageSegmentation.cu
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
-bindlessTexture_kernel.o:bindlessTexture_kernel.cu
+main.o:main.cpp
 	$(EXEC) $(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
-bindlessTexture: bindlessTexture.o bindlessTexture_kernel.o
+main: cluster.o image.o imageSegmentation.o main.o
 	$(EXEC) $(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
 	$(EXEC) mkdir -p ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)
 	$(EXEC) cp $@ ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)
 
 run: build
-	$(EXEC) ./bindlessTexture
+	$(EXEC) ./main
 
 clean:
-	rm -f bindlessTexture bindlessTexture.o bindlessTexture_kernel.o
-	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/bindlessTexture
+	rm -f main cluster.o image.o imageSegmentation.o main.o
+	rm -rf ../../bin/$(TARGET_ARCH)/$(TARGET_OS)/$(BUILD_TYPE)/main
 
 clobber: clean
