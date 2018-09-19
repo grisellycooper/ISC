@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "../include/image.h"
+#include "image.h"
 
 using namespace std;
 

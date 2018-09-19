@@ -1,6 +1,8 @@
+#pragma once
+/*
 #ifndef GPU_TIMER_H__
 #define GPU_TIMER_H__
-
+*/
 #include <cuda_runtime.h>
 
 struct GpuTimer
@@ -39,4 +41,5 @@ struct GpuTimer
   }
 };
 
-#endif  /* GPU_TIMER_H__ */
+
+// #endif  /* GPU_TIMER_H__ */

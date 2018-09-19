@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
-#include "../include/image.h"
-#include "../include/cluster.h"
+#include "image.h"
+#include "cluster.h"
 
 using namespace std;
 
